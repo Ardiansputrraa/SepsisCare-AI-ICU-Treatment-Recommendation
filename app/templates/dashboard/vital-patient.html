@@ -4,49 +4,105 @@
     {% include 'component/header.html'%}
 
     <script>
+      let currentIndex = 0;
+      let chartHeart, chartRespiratory, chartSp, chartSystolic, chartDiastolic, chartMean, chartGcs, chartSofa, chartSirs;
+      let dataVital = [];
+    
       $(document).ready(function () {
-        // Data for the heart rate chart
-        const data = {
-          labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00"], // Time Labels
-          datasets: [
-            {
-              label: "Heart Rate (bpm)", // Chart label
-              data: [70, 75, 78, 80, 85, 90], // Heart rate values
-              borderColor: "rgba(75, 192, 192, 1)", // Line color
-              backgroundColor: "rgba(75, 192, 192, 0.2)", // Fill color
-              borderWidth: 2,
-              tension: 0.4,
-            },
-          ],
-        };
-
-        // Configuration options for the chart
-        const config = {
-          type: "line",
-          data: data,
-          options: {
-            responsive: true,
-            scales: {
-              x: {
-                beginAtZero: true,
-              },
-              y: {
-                beginAtZero: true,
-              },
-            },
-          },
-        };
-
-        // Initialize chart using jQuery
-        const heartRateChart = new Chart($("#heartRateChart")[0], config);
-
-        // Example of dynamically updating chart data with jQuery
-        $("#updateData").click(function () {
-          const newData = [72, 76, 79, 82, 88, 92]; // New heart rate values
-          heartRateChart.data.datasets[0].data = newData; // Update dataset
-          heartRateChart.update(); // Re-render the chart with updated data
-        });
+        fetchVitalData();
+        setInterval(fetchNextData, 6000);
       });
+    
+      function fetchVitalData() {
+        $.ajax({
+          url: "/get-vital-data/{{ bed_id }}",
+          type: "GET",
+          success: function (data) {
+            dataVital = data;
+            initializeChart();
+          },
+          error: function (err) {
+            console.error("Error fetching data: ", err);
+          },
+        });
+      }
+    
+      function initializeChart() {
+        let dummyData = new Array(5).fill(0);
+    
+        function createChart(ctx, label, bgColor, borderColor) {
+          return new Chart(ctx, {
+            type: "line",
+            data: {
+              labels: ["", "", "", "", ""],
+              datasets: [
+                {
+                  label: label,
+                  data: [...dummyData],
+                  backgroundColor: bgColor,
+                  borderColor: borderColor,
+                  pointStyle: "line",
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+              scales: {
+                x: {
+                  display: true,
+                },
+                y: {
+                  beginAtZero: true,
+                },
+              },
+              animation: false,
+            },
+          });
+        }
+    
+        chartHeart = createChart($("#heart").get(0).getContext("2d"), "Heart Rate", "rgb(30, 64, 175)", "rgb(30, 64, 175)");
+        chartRespiratory = createChart($("#respiratory").get(0).getContext("2d"), "Respiratory Rate", "rgba(0, 150, 199, 1)", "rgba(0, 150, 199, 1)");
+        chartSp = createChart($("#sp").get(0).getContext("2d"), "SpO2", "rgb(34, 211, 238)", "rgb(34, 211, 238)");
+        chartSystolic = createChart($("#systolic").get(0).getContext("2d"), "Systolic BP", "rgba(255, 143, 163, 1)", "rgba(255, 143, 163, 1)");
+        chartDiastolic = createChart($("#diastolic").get(0).getContext("2d"), "Diastolic BP", "rgba(255, 77, 109, 1)", "rgba(255, 77, 109, 1)");
+        chartMean = createChart($("#mean").get(0).getContext("2d"), "Mean BP", "rgba(201, 24, 74, 1)", "rgba(201, 24, 74, 1)");
+        chartGcs = createChart($("#gcs").get(0).getContext("2d"), "GCS", "rgba(216, 87, 42, 1)", "rgba(216, 87, 42, 1)");
+        chartSofa = createChart($("#sofa").get(0).getContext("2d"), "SOFA", "rgba(219, 124, 38, 1)", "rgba(219, 124, 38, 1)");
+        chartSirs = createChart($("#sirs").get(0).getContext("2d"), "SIRS", "rgba(247, 181, 56, 1)", "rgba(247, 181, 56, 1)");
+      }
+    
+      function fetchNextData() {
+        if (dataVital.length > 0) {
+          if (currentIndex < dataVital.length - 1) {
+            updateChart();
+            currentIndex++;
+          }
+        }
+      }
+    
+      function updateChart() {
+        if (dataVital.length > 0) {
+          function shiftAndPush(chart, newData) {
+            if (chart.data.labels.length >= 5) {
+              chart.data.labels.shift();
+              chart.data.datasets[0].data.shift();
+            }
+            chart.data.labels.push(dataVital[currentIndex].charttime);
+            chart.data.datasets[0].data.push(newData);
+            chart.update();
+          }
+    
+          shiftAndPush(chartHeart, dataVital[currentIndex].HR);
+          shiftAndPush(chartRespiratory, dataVital[currentIndex].RR);
+          shiftAndPush(chartSp, dataVital[currentIndex].SpO2);
+          shiftAndPush(chartSystolic, dataVital[currentIndex].SysBP);
+          shiftAndPush(chartDiastolic, dataVital[currentIndex].DiaBP);
+          shiftAndPush(chartMean, dataVital[currentIndex].MeanBP);
+          shiftAndPush(chartGcs, dataVital[currentIndex].GCS);
+          shiftAndPush(chartSofa, dataVital[currentIndex].SOFA);
+          shiftAndPush(chartSirs, dataVital[currentIndex].SIRS);
+        }
+      }
     </script>
   </head>
   <body>
@@ -57,23 +113,66 @@
       >
         {% include 'component/tabbar.html'%}
 
-        <!-- Chart Heart Rate -->
         <div
           class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-4 mt-6"
         >
+        <!-- Chart Time Series -->
           <div
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
-            <h2
-              class="text-xl font-semibold text-center text-gray-800 dark:text-white mb-4"
-            >
-              Heart Rate
-            </h2>
-            <canvas id="heartRateChart"></canvas>
+            <canvas id="heart"></canvas>
           </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="respiratory"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="sp"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="systolic"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="diastolic"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="mean"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="gcs"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="sofa"></canvas>
+          </div>
+
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <canvas id="sirs"></canvas>
+          </div>
+
         </div>
       </div>
-
       {% include 'component/footer.html'%}
     </div>
   </body>

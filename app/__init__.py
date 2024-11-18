@@ -22,4 +22,15 @@ def create_app():
     from .routes.profile import profile_
     app.register_blueprint(profile_)
     
+    from .routes.vital_patient import vital_patient_
+    app.register_blueprint(vital_patient_)
+    
+    from .routes.treatment_recommendation import treatment_recommendation_
+    app.register_blueprint(treatment_recommendation_)
+    
+    from .routes.predict import predict_
+    app.register_blueprint(predict_)
+    
+    
+    
     return app
