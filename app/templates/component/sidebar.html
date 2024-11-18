@@ -1,0 +1,97 @@
+<aside
+      id="logo-sidebar"
+      class="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-50 border-r border-gray-200 sm:translate-x-0 dark:bg-gray-900 dark:border-gray-900"
+      aria-label="Sidebar"
+    >
+      <div class="h-full px-3 pb-4 overflow-y-auto bg-gray-50 dark:bg-gray-900">
+        <ul class="space-y-2 font-medium">
+          <li>
+            <a
+              href="#"
+              class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+            >
+              <i class="mdi mdi-periodic-table text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+              <span class="ms-3">Highlight</span>
+            </a>
+          </li>
+          <li>
+            <a
+              href="/bed_selection"
+              class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+            >
+              <i class="mdi mdi-badge-account-horizontal-outline text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+              <span class="ms-3">Bed Selection</span>
+            </a>
+          </li>
+        </ul>
+        <ul
+          class="pt-4 mt-4 space-y-2 font-medium border-t border-blue-800 dark:border-cyan-900"
+        >
+        <li>
+          <a
+            href="#"
+            class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+          >
+            <i class="mdi mdi-bottle-tonic-plus-outline text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+            <span class="ms-3">Treatment History</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+          >
+            <i class="mdi mdi-tray-plus text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+            <span class="ms-3">Recommend</span>
+          </a>
+        </li>
+        <li>
+          <a
+            href="#"
+            class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+          >
+            <i class="mdi mdi-account-search-outline text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+            <span class="ms-3">Similarity</span>
+          </a>
+        </li>
+        <ul
+          class="pt-4 mt-4 space-y-2 font-medium border-t border-blue-800 dark:border-cyan-900"
+        >
+        <li>
+          <a
+            href="/sign_up"
+            class="flex items-center p-2 text-gray-950 rounded-lg dark:text-white hover:bg-blue-900 hover:text-white dark:hover:bg-cyan-900 group dark:hover:text-white"
+          >
+            <i class="mdi mdi-account-plus-outline text-2xl text-blue-500 transition duration-75 dark:text-cyan-400"></i>
+            <span class="ms-3">Sign Up</span>
+          </a>
+        </li>
+        </ul>
+      </div>
+    </aside>
+
+    <script>
+      $(document).ready(function() {
+        $('aside a').each(function() {
+          var currentUrl = window.location.href;
+          var linkUrl = $(this).attr('href');
+          
+          if (currentUrl.includes(linkUrl)) {
+            $(this).addClass('bg-blue-900 text-white dark:bg-cyan-900' ); 
+          } else {
+            $(this).removeClass('bg-blue-900 text-white dark:bg-cyan-900'); 
+          }
+        });
+      
+        $('aside a').click(function() {
+          $('aside a').removeClass('bg-blue-900 text-white');
+      
+          $(this).addClass('bg-blue-900 text-white');
+        });
+      });
+      if ($('body').hasClass('dark')) {
+        $('aside a').addClass('text-white bg-blue-900 dark:bg-cyan-900');
+      } else {
+        $('aside a').removeClass('text-white bg-blue-900 dark:bg-cyan-900');
+      }
+    </script>

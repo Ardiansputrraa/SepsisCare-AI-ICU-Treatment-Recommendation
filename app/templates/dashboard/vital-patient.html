@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'component/header.html'%}
+
+    <script>
+      $(document).ready(function () {
+        // Data for the heart rate chart
+        const data = {
+          labels: ["00:00", "01:00", "02:00", "03:00", "04:00", "05:00"], // Time Labels
+          datasets: [
+            {
+              label: "Heart Rate (bpm)", // Chart label
+              data: [70, 75, 78, 80, 85, 90], // Heart rate values
+              borderColor: "rgba(75, 192, 192, 1)", // Line color
+              backgroundColor: "rgba(75, 192, 192, 0.2)", // Fill color
+              borderWidth: 2,
+              tension: 0.4,
+            },
+          ],
+        };
+
+        // Configuration options for the chart
+        const config = {
+          type: "line",
+          data: data,
+          options: {
+            responsive: true,
+            scales: {
+              x: {
+                beginAtZero: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+          },
+        };
+
+        // Initialize chart using jQuery
+        const heartRateChart = new Chart($("#heartRateChart")[0], config);
+
+        // Example of dynamically updating chart data with jQuery
+        $("#updateData").click(function () {
+          const newData = [72, 76, 79, 82, 88, 92]; // New heart rate values
+          heartRateChart.data.datasets[0].data = newData; // Update dataset
+          heartRateChart.update(); // Re-render the chart with updated data
+        });
+      });
+    </script>
+  </head>
+  <body>
+    {% include 'component/navbar.html'%} {% include 'component/sidebar.html'%} "
+    <div class="p-4 sm:ml-64 bg-gray-100 border-b dark:bg-gray-950">
+      <div
+        class="p-4 border-2 border-gray-100 border-dashed rounded-lg dark:border-gray-950 mt-14"
+      >
+        {% include 'component/tabbar.html'%}
+
+        <!-- Chart Heart Rate -->
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 mb-4 mt-6"
+        >
+          <div
+            class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <h2
+              class="text-xl font-semibold text-center text-gray-800 dark:text-white mb-4"
+            >
+              Heart Rate
+            </h2>
+            <canvas id="heartRateChart"></canvas>
+          </div>
+        </div>
+      </div>
+
+      {% include 'component/footer.html'%}
+    </div>
+  </body>
+</html>
