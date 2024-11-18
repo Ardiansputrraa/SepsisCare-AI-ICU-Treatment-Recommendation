@@ -6,11 +6,11 @@ import jwt
 auth_ = Blueprint('auth', __name__)
 
 
-@auth_.route('/sign_in')
+@auth_.route('/sign-in')
 def sign_in():
     return render_template('auth/login.html')
 
-@auth_.route("/sign_in/check", methods=["POST"])
+@auth_.route("/sign-in/check", methods=["POST"])
 def sign_in_check():
     email = request.form["email"]
     password = request.form["password"]
@@ -43,7 +43,7 @@ def sign_in_check():
             }
         )
 
-@auth_.route('/sign_up')
+@auth_.route('/sign-up')
 def sign_up():
     myToken = request.cookies.get("mytoken")
     SECRET_KEY = current_app.config['SECRET_KEY']
@@ -57,7 +57,7 @@ def sign_up():
         return redirect(url_for("auth.sign_in", msg="Please login first!"))
     
 
-@auth_.route("/sign_up/save", methods=["POST"])
+@auth_.route("/sign-up/save", methods=["POST"])
 def sign_up_save():
     
     username = request.form['username']
