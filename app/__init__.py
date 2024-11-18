@@ -19,4 +19,7 @@ def create_app():
     from .routes.bed_selection import dashboard_
     app.register_blueprint(dashboard_)
     
+    from .routes.profile import profile_
+    app.register_blueprint(profile_)
+    
     return app

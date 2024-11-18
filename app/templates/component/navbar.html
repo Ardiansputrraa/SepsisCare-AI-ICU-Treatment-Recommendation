@@ -184,7 +184,7 @@
               <img
                 class="w-8 h-8 rounded-full"
                 src="{{ url_for('static', filename=user_info.profilePict) }}"
-                alt="user photo"
+                alt="Profile Picture"
               />
               <span class="ms-2">{{ user_info.username }}</span>
               <!-- Added ms-2 here -->
@@ -220,7 +220,7 @@
               >
                 <li>
                   <a
-                    href="#"
+                    href="/profile"
                     class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                     >My Profile</a
                   >
@@ -229,7 +229,7 @@
               <div class="py-2">
                 <button
                   onclick="logout()"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
+                  class="block px-4 w-full py-2 text-sm text-left text-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 dark:text-gray-200 dark:hover:text-white"
                   >Sign out</button
                 >
               </div>
