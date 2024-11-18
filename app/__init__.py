@@ -31,6 +31,7 @@ def create_app():
     from .routes.predict import predict_
     app.register_blueprint(predict_)
     
-    
+    from .routes.forecasting import forecasting_
+    app.register_blueprint(forecasting_)
     
     return app

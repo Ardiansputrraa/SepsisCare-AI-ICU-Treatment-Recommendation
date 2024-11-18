@@ -18,7 +18,7 @@ def profile():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("auth.sign_in", msg="Please login first!"))
     
-@profile_.route('/update_profile', methods=["POST"])
+@profile_.route('/update-profile', methods=["POST"])
 def update_profile():
     SECRET_KEY = current_app.config['SECRET_KEY']
     token_receive = request.cookies.get("mytoken")
