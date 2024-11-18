@@ -55,7 +55,7 @@
               }).then((result) => {
                 if (result.isConfirmed) {
                     document.cookie = "mytoken=" + response["token"] + "; path=/";
-                    window.location.replace("/bed_selection");
+                    window.location.replace("/bed-selection");
                 }
               });
             } else {

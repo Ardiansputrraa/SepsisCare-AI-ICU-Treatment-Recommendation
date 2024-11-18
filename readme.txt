@@ -10,6 +10,7 @@ install beberapa library yang dibutuhkan untuk virtual environment
 - pip install Flask requests pymongo dnspython certifi pyjwt pandas
 - pip install flask-cors
 - pip install pydantic
+- pip install scikit-learn
 
 selanjutnya run file app.py
 

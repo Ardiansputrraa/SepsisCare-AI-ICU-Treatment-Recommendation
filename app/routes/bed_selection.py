@@ -17,7 +17,7 @@ def dashboard():
     except jwt.exceptions.DecodeError:
         return redirect(url_for("auth.sign_in", msg="Please login first!"))
     
-@dashboard_.route('/bed_selection')
+@dashboard_.route('/bed-selection')
 def bed_selection():   
     myToken = request.cookies.get("mytoken")
     SECRET_KEY = current_app.config['SECRET_KEY']
@@ -32,4 +32,4 @@ def bed_selection():
 
 @dashboard_.route('/index')
 def index():   
-    return render_template('auth/login.html')
+    return render_template('dashboard/vital-patient.html')

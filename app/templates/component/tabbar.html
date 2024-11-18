@@ -1,54 +1,71 @@
 <div class="border-b border-gray-100 dark:border-gray-950">
-    <ul
-      class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-200"
-    >
-      <li class="me-2">
-        <a
-          href="#"
-          class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
-        >
-          <i
-            class="mdi mdi-chart-timeline-variant text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
-            style="font-size: 1.5rem; margin-right: 0.5rem"
-          ></i>
-          Vital Patient
-        </a>
-      </li>
-      <li class="me-2">
-        <a
-          href="#"
-          class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
-        >
-          <i
-            class="mdi mdi-currency-usd text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
-            style="font-size: 1.5rem; margin-right: 0.5rem"
-          ></i>
-          SOFA Score
-        </a>
-      </li>
-      <li class="me-2">
-        <a
-          href="#"
-          class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
-        >
-          <i
-            class="mdi mdi-finance text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
-            style="font-size: 1.5rem; margin-right: 0.5rem"
-          ></i>
-          Treatment Recommendation
-        </a>
-      </li>
-      <li class="me-2">
-        <a
-          href="#"
-          class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
-        >
-          <i
-            class="mdi mdi-chart-line text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
-            style="font-size: 1.5rem; margin-right: 0.5rem"
-          ></i>
-          Forecasting
-        </a>
-      </li>
-    </ul>
-  </div>
+  <ul
+    class="flex flex-wrap -mb-px text-sm font-medium text-center text-gray-500 dark:text-gray-200"
+  >
+    <li class="me-2">
+      <a
+        href="/vital-patient/{{ bed_id }}"
+        class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
+      >
+        <i
+          class="mdi mdi-chart-timeline-variant text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
+          style="font-size: 1.5rem; margin-right: 0.5rem"
+        ></i>
+        Vital Patient
+      </a>
+    </li>
+    <li class="me-2">
+      <a
+        href=""
+        class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
+      >
+        <i
+          class="mdi mdi-currency-usd text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
+          style="font-size: 1.5rem; margin-right: 0.5rem"
+        ></i>
+        SOFA Score
+      </a>
+    </li>
+    <li class="me-2">
+      <a
+        href="/treatment-recommendation/{{ bed_id }}"
+        class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
+      >
+        <i
+          class="mdi mdi-finance text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
+          style="font-size: 1.5rem; margin-right: 0.5rem"
+        ></i>
+        Treatment Recommendation
+      </a>
+    </li>
+    <li class="me-2">
+      <a
+        href="#"
+        class="inline-flex items-center justify-center p-4 border-b-2 border-transparent rounded-t-lg border-blue-500 dark:border-cyan-900 hover:text-blue-700 border-gray-00 hover:border-blue-700 dark:hover:border-cyan-400 dark:hover:text-cyan-400 group"
+      >
+        <i
+          class="mdi mdi-chart-line text-gray-500 group-hover:text-blue-700 dark:text-gray-500 dark:group-hover:text-cyan-400"
+          style="font-size: 1.5rem; margin-right: 0.5rem"
+        ></i>
+        Forecasting
+      </a>
+    </li>
+  </ul>
+</div>
+<script>
+  $(document).ready(function () {
+    var currentUrl = window.location.pathname;
+    $("ul li a").each(function () {
+      var tabUrl = $(this).attr("href");
+
+      if (currentUrl === tabUrl) {
+        $(this).addClass(
+          "border-blue-700 dark:bg-gray-950 text-blue-700 dark:border-cyan-400 dark:text-cyan-400 rounded-t-lg"
+        );
+        $(this).removeClass("border-transparent");
+        $(this).find("i").addClass("text-blue-700 dark:text-cyan-400");
+        $(this).find("i").removeClass("text-gray-500 dark:text-gray-500");
+      }
+    });
+  });
+</script>
