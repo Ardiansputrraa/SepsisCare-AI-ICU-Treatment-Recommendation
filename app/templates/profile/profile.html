@@ -15,7 +15,7 @@
             form_data.append("username", username);
             $.ajax({
               type: "POST",
-              url: "/update_profile",
+              url: "/update-profile",
               data: form_data,
               cache: false,
               contentType: false,
@@ -50,8 +50,8 @@
       class="min-h-screen flex items-center justify-center bg-gray-100 dark:bg-gray-950"
     >
       <div
-        data-aos="flip-left"
-        data-aos-easing="ease-out-cubic"
+        data-aos="fade-down"
+        data-aos-easing="linear"
         data-aos-duration="1000"
         class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-900 dark:border-gray-700"
       >
@@ -106,7 +106,7 @@
             </button>
             <button
               type="button"
-              onclick="window.location.replace('/bed_selection')"
+              onclick="window.location.replace('/bed-selection')"
               class="w-full sm:w-auto text-white bg-gray-400 hover:bg-gray-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-gray-800 dark:hover:bg-gray-700 dark:focus:ring-blue-800"
             >
               Back to menu

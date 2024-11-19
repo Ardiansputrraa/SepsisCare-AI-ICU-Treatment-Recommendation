@@ -29,7 +29,3 @@ def bed_selection():
         return redirect(url_for("auth.sign_in", msg="Login time has expired!"))
     except jwt.exceptions.DecodeError:
         return redirect(url_for("auth.sign_in", msg="Please login first!"))
-
-@dashboard_.route('/index')
-def index():   
-    return render_template('dashboard/vital-patient.html')

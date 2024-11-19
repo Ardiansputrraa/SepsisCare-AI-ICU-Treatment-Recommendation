@@ -32,7 +32,7 @@
         }
         $.ajax({
           type: "POST",
-          url: "/sign_in/check",
+          url: "/sign-in/check",
           data: {
             email: email,
             password: password,
@@ -74,8 +74,6 @@
                 },
               }).then((result) => {
                 if (result.isConfirmed) {
-                  $("#email").val("");
-                  $("#password").val("");
                 }
               });
             }
@@ -91,7 +89,7 @@
       <div
         data-aos="flip-left"
         data-aos-easing="ease-out-cubic"
-        data-aos-duration="1500"
+        data-aos-duration="1000"
         class="w-full max-w-sm p-4 bg-white border border-gray-200 rounded-lg shadow sm:p-6 md:p-8 dark:bg-gray-900 dark:border-gray-700"
       >
         <form class="space-y-6" action="#">
