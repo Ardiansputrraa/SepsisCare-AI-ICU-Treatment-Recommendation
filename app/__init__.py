@@ -37,4 +37,7 @@ def create_app():
     from .routes.treatment_history import treatment_history_
     app.register_blueprint(treatment_history_)
     
+    from .routes.similarity import similarity_
+    app.register_blueprint(similarity_)
+    
     return app

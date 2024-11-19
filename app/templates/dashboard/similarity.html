@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'component/header.html'%}
+
+    <script>
+      let currentIndex = 0;
+      let chartHeart, chartRespiratory, chartMean;
+      let dataVital = [];
+      let date, hours, minutes, seconds, now;
+      let dataHeartPredict = { x: null, y: null };
+      let dataMeanPredict = { x: null, y: null };
+      let dataRespiratoryPredict = { x: null, y: null };
+      let chartHeartPredict, chartRespiratoryPredict, chartMeanPredict;
+
+      $(document).ready(function () {
+        fetchVitalData();
+        setInterval(fetchNextData, 6000);
+      });
+
+      function fetchVitalData() {
+        $.ajax({
+          url: "/get-vital-data/{{ bed_id }}",
+          type: "GET",
+          success: function (data) {
+            dataVital = data;
+            date = new Date();
+            hours = String(date.getHours()).padStart(2, "0");
+            minutes = String(date.getMinutes()).padStart(2, "0");
+            seconds = String(date.getSeconds()).padStart(2, "0");
+            now = `${hours}:${minutes}:${seconds}`;
+            dataHeartPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataMeanPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataRespiratoryPredict = {
+              x: now,
+              y: Math.floor(Math.random() * 5),
+            };
+            initializeChart();
+            if (dataVital.length > 1) {
+              // Update Chart Heart Rate
+              chartHeart.data.labels.push(dataVital[currentIndex].charttime);
+              chartHeart.data.datasets[0].data.push(dataVital[0].HR);
+              chartHeart.update();
+
+              // Update Chart Respiratory Rate
+              chartRespiratory.data.labels.push(
+                dataVital[currentIndex].charttime
+              );
+              chartRespiratory.data.datasets[0].data.push(dataVital[0].RR);
+              chartRespiratory.update();
+
+              // Update Chart Mean BP
+              chartMean.data.labels.push(dataVital[currentIndex].charttime);
+              chartMean.data.datasets[0].data.push(dataVital[0].MeanBP);
+              chartMean.update();
+
+              // Update Heart Rate Predict
+              chartHeartPredict.data.labels.push(now);
+              chartHeartPredict.data.datasets[0].data.push(dataHeartPredict.y);
+              chartHeartPredict.update();
+
+              // Update Respiratory Rate Predict
+              chartRespiratoryPredict.data.labels.push(now);
+              chartRespiratoryPredict.data.datasets[0].data.push(
+                dataRespiratoryPredict.y
+              );
+              chartRespiratoryPredict.update();
+
+              // Update Mean Rate Predict
+              chartMeanPredict.data.labels.push(now);
+              chartMeanPredict.data.datasets[0].data.push(dataMeanPredict.y);
+              chartMeanPredict.update();
+            }
+          },
+          error: function (err) {
+            console.error("Error fetching data: ", err);
+          },
+        });
+      }
+
+      function fetchNextData() {
+        if (dataVital.length > 0) {
+          if (currentIndex < dataVital.length - 1) {
+            date = new Date();
+            hours = String(date.getHours()).padStart(2, "0");
+            minutes = String(date.getMinutes()).padStart(2, "0");
+            seconds = String(date.getSeconds()).padStart(2, "0");
+            now = `${hours}:${minutes}:${seconds}`;
+            dataHeartPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataMeanPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataRespiratoryPredict = {
+              x: now,
+              y: Math.floor(Math.random() * 5),
+            };
+            currentIndex++;
+            updateChart();
+          }
+        }
+      }
+
+      function initializeChart() {
+        // Chart Heart Rate
+        let ctxHeart = $("#heart").get(0).getContext("2d");
+        chartHeart = new Chart(ctxHeart, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Heart Rate",
+                data: [],
+                backgroundColor: "rgb(30, 64, 175)",
+                borderColor: "rgb(30, 64, 175)",
+                pointStyle: "line",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+
+        // Chart Respiratory Rate
+        let ctxRespiratory = $("#respiratory").get(0).getContext("2d");
+        chartRespiratory = new Chart(ctxRespiratory, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Respiratory Rate",
+                data: [],
+                backgroundColor: "rgba(0, 150, 199, 1)",
+                borderColor: "rgba(0, 150, 199, 1)",
+                pointStyle: "line",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+
+        // Chart Mean BP
+        let ctxMean = $("#mean").get(0).getContext("2d");
+        chartMean = new Chart(ctxMean, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Mean BP",
+                data: [],
+                backgroundColor: "rgba(201, 24, 74, 1)",
+                borderColor: "rgba(201, 24, 74, 1)",
+                pointStyle: "line",
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+
+        // Chart Heart Rate Predict
+        let ctxHeartPredict = $("#heart-predict").get(0).getContext("2d");
+        chartHeartPredict = new Chart(ctxHeartPredict, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Heart Rate Predict",
+                data: [],
+                backgroundColor: "rgb(30, 64, 175)",
+                borderColor: "rgb(30, 64, 175)",
+                pointStyle: "circle",
+                borderDash: [5, 5],
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+
+        // Chart Respiratory Rate Predict
+        let ctxRespiratoryPredict = $("#respiratory-predict")
+          .get(0)
+          .getContext("2d");
+        chartRespiratoryPredict = new Chart(ctxRespiratoryPredict, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Respiratory Rate Predict",
+                data: [],
+                backgroundColor: "rgba(0, 150, 199, 1)",
+                borderColor: "rgba(0, 150, 199, 1)",
+                pointStyle: "circle",
+                borderDash: [5, 5],
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+
+        // Chart Mean BP Predict
+        let ctxMeanPredict = $("#mean-predict").get(0).getContext("2d");
+        chartMeanPredict = new Chart(ctxMeanPredict, {
+          type: "line",
+          data: {
+            labels: [],
+            datasets: [
+              {
+                label: "Mean BP",
+                data: [],
+                backgroundColor: "rgba(201, 24, 74, 1)",
+                borderColor: "rgba(201, 24, 74, 1)",
+                pointStyle: "circle",
+                borderDash: [5, 5],
+                fill: false,
+              },
+            ],
+          },
+          options: {
+            scales: {
+              x: {
+                display: true,
+              },
+              y: {
+                beginAtZero: true,
+              },
+            },
+            animation: false,
+          },
+        });
+      }
+
+      function updateChart() {
+        if (dataVital.length > 0) {
+          if (chartHeart.data.labels.length >= 4) {
+            // Delete Chart Heart Rate
+            chartHeart.data.labels.shift();
+            chartHeart.data.datasets[0].data.shift();
+
+            // Delete Chart Respiratory Rate
+            chartRespiratory.data.labels.shift();
+            chartRespiratory.data.datasets[0].data.shift();
+
+            // Delete Chart Mean BP
+            chartMean.data.labels.shift();
+            chartMean.data.datasets[0].data.shift();
+
+            // Delete Chart Heart Rate Predict
+            chartHeartPredict.data.labels.shift();
+            chartHeartPredict.data.datasets[0].data.shift();
+
+            // Delete Chart Respiratory Rate Predict
+            chartRespiratoryPredict.data.labels.shift();
+            chartRespiratoryPredict.data.datasets[0].data.shift();
+
+            // Delete Chart Mean BP Predict
+            chartMeanPredict.data.labels.shift();
+            chartMeanPredict.data.datasets[0].data.shift();
+          }
+
+          // Update Chart Heart Rate
+          let newHeartRate = dataVital[currentIndex].HR;
+          chartHeart.data.labels.push(dataVital[currentIndex].charttime);
+          chartHeart.data.datasets[0].data.push(newHeartRate);
+          chartHeart.update();
+
+          // Update Chart Respiratory Rate
+          let newResporatoryRate = dataVital[currentIndex].RR;
+          chartRespiratory.data.labels.push(dataVital[currentIndex].charttime);
+          chartRespiratory.data.datasets[0].data.push(newResporatoryRate);
+          chartRespiratory.update();
+
+          // Update Chart Mean BP
+          let newMean = dataVital[currentIndex].MeanBP;
+          chartMean.data.labels.push(dataVital[currentIndex].charttime);
+          chartMean.data.datasets[0].data.push(newMean);
+          chartMean.update();
+
+          // Update Heart Rate Predict
+          chartHeartPredict.data.labels.push(now);
+          chartHeartPredict.data.datasets[0].data.push(dataHeartPredict.y);
+          chartHeartPredict.update();
+
+          // Update Respiratory Rate Predict
+          chartRespiratoryPredict.data.labels.push(now);
+          chartRespiratoryPredict.data.datasets[0].data.push(
+            dataRespiratoryPredict.y
+          );
+          chartRespiratoryPredict.update();
+
+          // Update Mean Rate Predict
+          chartMeanPredict.data.labels.push(now);
+          chartMeanPredict.data.datasets[0].data.push(dataMeanPredict.y);
+          chartMeanPredict.update();
+        }
+      }
+    </script>
+  </head>
+  <body>
+    {% include 'component/navbar.html'%} {% include 'component/sidebar.html'%} "
+    <div class="p-4 sm:ml-64 bg-gray-100 border-b dark:bg-gray-950">
+      <div
+        class="p-4 border-2 border-gray-100 border-dashed rounded-lg dark:border-gray-950 mt-14"
+      >
+        <div class="flex justify-between items-center mb-6">
+          <h1
+            class="mb-10 text-4xl font-semibold text-black dark:text-gray-300"
+          >
+            Similarity
+          </h1>
+          <!-- Search Bar -->
+          <div class="w-64 sm:w-72 md:w-80 -mt-8">
+            <form class="max-w-md mx-auto">
+              <label
+                for="default-search"
+                class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
+                >Search</label
+              >
+              <div class="relative">
+                <div
+                  class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                >
+                  <svg
+                    class="w-4 h-4 text-gray-500 dark:text-gray-400"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      stroke="currentColor"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"
+                    />
+                  </svg>
+                </div>
+                <input
+                  type="search"
+                  id="default-search"
+                  class="block w-full p-3 pl-10 text-sm text-gray-900 border border-blue-500 rounded-lg bg-gray-50 focus:ring-blue-700 focus:border-blue-700 dark:bg-gray-900 dark:border-cyan-900 dark:placeholder-gray-400 dark:text-white dark:focus:ring-cyan-400 dark:focus:border-cyan-400"
+                  placeholder="Search Mockups, Logos..."
+                  required
+                />
+              </div>
+            </form>
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 mb-4 mt-6"
+        >
+          <!-- Chart Similarity -->
+          <div
+            data-aos="fade-right"
+            data-aos-duration="1500"
+            class="col-span-1 p-4 border rounded-lg bg-white border-blue-500 shadow-md dark:bg-gray-900 dark:border-cyan-900"
+          >
+            <div
+              class="relative bg-primary w-full h-32 flex items-center justify-center"
+            >
+              <i
+                class="mdi mdi-file-account-outline text-blue-700 dark:text-cyan-400 text-6xl"
+              ></i>
+            </div>
+            <h5
+              class="text-xl font-semibold text-center mb-4 text-black dark:text-white"
+            >
+              Stay ID 1312312312
+            </h5>
+            <ul class="list-none text-gray-500 dark:text-gray-400 text-sm mb-2">
+              <li>HADM ID: 1312312312</li>
+              <li>ICD CODE: 1312312312</li>
+              <li>Diagnosis: dataSimilarity[i].diagnosis</li>
+            </ul>
+            <div class="text-center mt-auto">
+              <button
+                class="btn w-full mt-2 py-2 rounded mb-2 hover:bg-blue-800 text-white bg-blue-500 dark:bg-cyan-900 dark:hover:bg-cyan-400 dark:hover:text-black  transition"
+                onclick="selectSimilarity('${dataSimilarity[i].stayId}')"
+              >
+                View
+              </button>
+            </div>
+          </div>
+
+          
+
+        </div>
+      </div>
+      {% include 'component/footer.html'%}
+    </div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
