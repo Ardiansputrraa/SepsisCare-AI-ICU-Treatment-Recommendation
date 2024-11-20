@@ -5,9 +5,7 @@
 
     <script>
       let currentIndex = 0;
-      let chartHeart,
-        chartRespiratory,
-        chartMean;
+      let chartHeart, chartRespiratory, chartMean;
       let dataVital = [];
       let date, hours, minutes, seconds, now;
       let dataHeartPredict = { x: null, y: null };
@@ -27,24 +25,29 @@
           success: function (data) {
             dataVital = data;
             date = new Date();
-            hours = String(date.getHours()).padStart(2, '0');   
-            minutes = String(date.getMinutes()).padStart(2, '0'); 
-            seconds = String(date.getSeconds()).padStart(2, '0'); 
+            hours = String(date.getHours()).padStart(2, "0");
+            minutes = String(date.getMinutes()).padStart(2, "0");
+            seconds = String(date.getSeconds()).padStart(2, "0");
             now = `${hours}:${minutes}:${seconds}`;
             dataHeartPredict = { x: now, y: Math.floor(Math.random() * 5) };
             dataMeanPredict = { x: now, y: Math.floor(Math.random() * 5) };
-            dataRespiratoryPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataRespiratoryPredict = {
+              x: now,
+              y: Math.floor(Math.random() * 5),
+            };
             initializeChart();
             if (dataVital.length > 1) {
               // Update Chart Heart Rate
               chartHeart.data.labels.push(dataVital[currentIndex].charttime);
               chartHeart.data.datasets[0].data.push(dataVital[0].HR);
-              chartHeart.update(); 
+              chartHeart.update();
 
               // Update Chart Respiratory Rate
-              chartRespiratory.data.labels.push(dataVital[currentIndex].charttime);
+              chartRespiratory.data.labels.push(
+                dataVital[currentIndex].charttime
+              );
               chartRespiratory.data.datasets[0].data.push(dataVital[0].RR);
-              chartRespiratory.update(); 
+              chartRespiratory.update();
 
               // Update Chart Mean BP
               chartMean.data.labels.push(dataVital[currentIndex].charttime);
@@ -54,17 +57,19 @@
               // Update Heart Rate Predict
               chartHeartPredict.data.labels.push(now);
               chartHeartPredict.data.datasets[0].data.push(dataHeartPredict.y);
-              chartHeartPredict.update(); 
+              chartHeartPredict.update();
 
               // Update Respiratory Rate Predict
               chartRespiratoryPredict.data.labels.push(now);
-              chartRespiratoryPredict.data.datasets[0].data.push(dataRespiratoryPredict.y);
-              chartRespiratoryPredict.update(); 
+              chartRespiratoryPredict.data.datasets[0].data.push(
+                dataRespiratoryPredict.y
+              );
+              chartRespiratoryPredict.update();
 
               // Update Mean Rate Predict
               chartMeanPredict.data.labels.push(now);
               chartMeanPredict.data.datasets[0].data.push(dataMeanPredict.y);
-              chartMeanPredict.update(); 
+              chartMeanPredict.update();
             }
           },
           error: function (err) {
@@ -77,13 +82,16 @@
         if (dataVital.length > 0) {
           if (currentIndex < dataVital.length - 1) {
             date = new Date();
-            hours = String(date.getHours()).padStart(2, '0');   
-            minutes = String(date.getMinutes()).padStart(2, '0'); 
-            seconds = String(date.getSeconds()).padStart(2, '0'); 
+            hours = String(date.getHours()).padStart(2, "0");
+            minutes = String(date.getMinutes()).padStart(2, "0");
+            seconds = String(date.getSeconds()).padStart(2, "0");
             now = `${hours}:${minutes}:${seconds}`;
             dataHeartPredict = { x: now, y: Math.floor(Math.random() * 5) };
             dataMeanPredict = { x: now, y: Math.floor(Math.random() * 5) };
-            dataRespiratoryPredict = { x: now, y: Math.floor(Math.random() * 5) };
+            dataRespiratoryPredict = {
+              x: now,
+              y: Math.floor(Math.random() * 5),
+            };
             currentIndex++;
             updateChart();
           }
@@ -119,7 +127,7 @@
             },
             animation: false,
           },
-        }); 
+        });
 
         // Chart Respiratory Rate
         let ctxRespiratory = $("#respiratory").get(0).getContext("2d");
@@ -149,7 +157,7 @@
             },
             animation: false,
           },
-        }); 
+        });
 
         // Chart Mean BP
         let ctxMean = $("#mean").get(0).getContext("2d");
@@ -210,10 +218,12 @@
             },
             animation: false,
           },
-        }); 
+        });
 
         // Chart Respiratory Rate Predict
-        let ctxRespiratoryPredict = $("#respiratory-predict").get(0).getContext("2d");
+        let ctxRespiratoryPredict = $("#respiratory-predict")
+          .get(0)
+          .getContext("2d");
         chartRespiratoryPredict = new Chart(ctxRespiratoryPredict, {
           type: "line",
           data: {
@@ -241,7 +251,7 @@
             },
             animation: false,
           },
-        }); 
+        });
 
         // Chart Mean BP Predict
         let ctxMeanPredict = $("#mean-predict").get(0).getContext("2d");
@@ -280,11 +290,11 @@
           if (chartHeart.data.labels.length >= 4) {
             // Delete Chart Heart Rate
             chartHeart.data.labels.shift();
-            chartHeart.data.datasets[0].data.shift(); 
+            chartHeart.data.datasets[0].data.shift();
 
             // Delete Chart Respiratory Rate
             chartRespiratory.data.labels.shift();
-            chartRespiratory.data.datasets[0].data.shift(); 
+            chartRespiratory.data.datasets[0].data.shift();
 
             // Delete Chart Mean BP
             chartMean.data.labels.shift();
@@ -292,54 +302,53 @@
 
             // Delete Chart Heart Rate Predict
             chartHeartPredict.data.labels.shift();
-            chartHeartPredict.data.datasets[0].data.shift(); 
+            chartHeartPredict.data.datasets[0].data.shift();
 
             // Delete Chart Respiratory Rate Predict
             chartRespiratoryPredict.data.labels.shift();
-            chartRespiratoryPredict.data.datasets[0].data.shift(); 
+            chartRespiratoryPredict.data.datasets[0].data.shift();
 
             // Delete Chart Mean BP Predict
             chartMeanPredict.data.labels.shift();
             chartMeanPredict.data.datasets[0].data.shift();
-          } 
+          }
 
           // Update Chart Heart Rate
           let newHeartRate = dataVital[currentIndex].HR;
-          chartHeart.data.labels.push((dataVital[currentIndex].charttime));
+          chartHeart.data.labels.push(dataVital[currentIndex].charttime);
           chartHeart.data.datasets[0].data.push(newHeartRate);
-          chartHeart.update(); 
+          chartHeart.update();
 
           // Update Chart Respiratory Rate
           let newResporatoryRate = dataVital[currentIndex].RR;
-          chartRespiratory.data.labels.push((dataVital[currentIndex].charttime));
+          chartRespiratory.data.labels.push(dataVital[currentIndex].charttime);
           chartRespiratory.data.datasets[0].data.push(newResporatoryRate);
-          chartRespiratory.update(); 
+          chartRespiratory.update();
 
           // Update Chart Mean BP
           let newMean = dataVital[currentIndex].MeanBP;
-          chartMean.data.labels.push((dataVital[currentIndex].charttime));
+          chartMean.data.labels.push(dataVital[currentIndex].charttime);
           chartMean.data.datasets[0].data.push(newMean);
-          chartMean.update(); 
+          chartMean.update();
 
           // Update Heart Rate Predict
           chartHeartPredict.data.labels.push(now);
           chartHeartPredict.data.datasets[0].data.push(dataHeartPredict.y);
-          chartHeartPredict.update(); 
+          chartHeartPredict.update();
 
           // Update Respiratory Rate Predict
           chartRespiratoryPredict.data.labels.push(now);
-          chartRespiratoryPredict.data.datasets[0].data.push(dataRespiratoryPredict.y);
-          chartRespiratoryPredict.update(); 
+          chartRespiratoryPredict.data.datasets[0].data.push(
+            dataRespiratoryPredict.y
+          );
+          chartRespiratoryPredict.update();
 
           // Update Mean Rate Predict
           chartMeanPredict.data.labels.push(now);
           chartMeanPredict.data.datasets[0].data.push(dataMeanPredict.y);
-          chartMeanPredict.update(); 
+          chartMeanPredict.update();
         }
       }
-
-      
-      
     </script>
   </head>
   <body>
@@ -355,7 +364,7 @@
         >
           <!-- Chart Time Series -->
           <div
-          data-aos="fade-right"
+            data-aos="fade-right"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
@@ -363,7 +372,7 @@
           </div>
 
           <div
-          data-aos="zoom-in-up"
+            data-aos="zoom-in-up"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
@@ -371,7 +380,7 @@
           </div>
 
           <div
-          data-aos="fade-left"
+            data-aos="fade-left"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
@@ -379,7 +388,7 @@
           </div>
 
           <div
-          data-aos="fade-up-right"
+            data-aos="fade-up-right"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
@@ -387,7 +396,7 @@
           </div>
 
           <div
-          data-aos="zoom-in-up"
+            data-aos="zoom-in-up"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
@@ -395,7 +404,7 @@
           </div>
 
           <div
-          data-aos="fade-up-left"
+            data-aos="fade-up-left"
             data-aos-duration="1500"
             class="col-span-1 p-4 border rounded-lg bg-gray-50 shadow-md dark:bg-gray-900 dark:border-cyan-900"
           >
