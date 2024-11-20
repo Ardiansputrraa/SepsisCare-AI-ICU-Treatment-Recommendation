@@ -40,4 +40,7 @@ def create_app():
     from .routes.similarity import similarity_
     app.register_blueprint(similarity_)
     
+    from .routes.summary import summary_
+    app.register_blueprint(summary_)
+    
     return app

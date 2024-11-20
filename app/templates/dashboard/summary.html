@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% include 'component/header.html'%}
+    <script>
+      $(document).ready(function () {
+        fetchSummaryData();
+      });
+
+      function fetchSummaryData() {
+        $.ajax({
+          url: "/get-summary/{{ stay_id }}",
+          type: "GET",
+          success: function (data) {
+            dataSummary = data["data_summary"];
+            stayId = data["stay_id"];
+            $("#detailSummary").empty();
+            for (let i = 0; i < dataSummary.length; i++) {
+              if (dataSummary[i]["stayId"] === stayId) {
+                let medicalHistory = dataSummary[i].medichistory;
+                let currentCondition = dataSummary[i].condition;
+
+                let medicalHistoryItems = medicalHistory
+                  .map((item) => `<li>${item}</li>`)
+                  .join("");
+                let currentConditionItems = currentCondition
+                  .map((item) => `<li>${item}</li>`)
+                  .join("");
+
+                let detailTemp = `<h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>ID: </b>${dataSummary[i].id}
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Age: </b> ${dataSummary[i].age}
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Gender: </b> ${dataSummary[i].gender}
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Admission Date: </b>${dataSummary[i].date}
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Primary Diagnosis:</b>${dataSummary[i].diagnosis}
+              </h5>
+
+              <!-- Medical History -->
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Medical History:</b>
+              </h5>
+              <ul class="list-disc pl-5 text-gray-600 dark:text-gray-400">
+                ${medicalHistoryItems}
+
+              <!-- Current Condition -->
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-5 mb-5"
+              >
+                <b>Current Condition:</b>
+              </h5>
+              <ul class="list-disc pl-5 text-gray-600 dark:text-gray-400">
+                ${currentConditionItems}
+              </ul>`;
+
+                $("#detailSummary").append(detailTemp);
+                console.log(dataSummary);
+              }
+            }
+          },
+          error: function (err) {
+            console.error("Error fetching data: ", err);
+          },
+        });
+      }
+    </script>
+  </head>
+  <body>
+    {% include 'component/navbar.html'%} {% include 'component/sidebar.html'%} "
+    <div class="p-4 sm:ml-64 bg-gray-100 border-b dark:bg-gray-950">
+      <div
+        class="p-4 border-2 border-gray-100 border-dashed rounded-lg dark:border-gray-950 mt-14"
+      >
+        <div class="flex items-center justify-between mb-10">
+          <!-- Patient Summary Title -->
+          <h1
+            class="text-2xl md:text-4xl font-semibold text-black dark:text-gray-200"
+          >
+            Patient Summary
+          </h1>
+          <!-- Back Button -->
+          <div class="flex items-center space-x-3">
+            <a
+              href="/similarity"
+              class="inline-flex items-center px-8 py-2 text-base font-medium text-white bg-blue-600 rounded-lg hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 dark:bg-cyan-700 dark:hover:bg-cyan-500 dark:hover:text-black dark:focus:ring-cyan-400 transition"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="w-5 h-5 mr-2"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18"
+                />
+              </svg>
+              Back
+            </a>
+          </div>
+        </div>
+
+        <div class="w-full mb-6">
+          <div
+          data-aos="fade-up"
+            data-aos-duration="2000"
+            class="bg-gray-50 rounded-lg shadow-md p-6 dark:bg-gray-900 dark:border-cyan-900 relative"
+          >
+            <!-- Patient Summary Content -->
+            <div class="relative mt-3" id="detailSummary">
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>ID:</b>
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Age:</b>
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Gender:</b>
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Admission Date:</b>
+              </h5>
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Primary Diagnosis:</b>
+              </h5>
+
+              <!-- Medical History -->
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-5"
+              >
+                <b>Medical History:</b>
+              </h5>
+              <ul class="list-disc pl-5 text-gray-600 dark:text-gray-400">
+                <li>-</li>
+              </ul>
+
+              <!-- Current Condition -->
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-5 mb-5"
+              >
+                <b>Current Condition:</b>
+              </h5>
+              <ul class="list-disc pl-5 text-gray-600 dark:text-gray-400">
+                <li>-</li>
+              </ul>
+
+              <!-- Plan -->
+              <h5
+                class="text-lg font-semibold text-gray-700 dark:text-gray-300 mt-5 mb-5"
+              >
+                <b>Plan:</b>
+              </h5>
+              <ul class="list-disc pl-5 text-gray-600 dark:text-gray-400">
+                <li>-</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% include 'component/footer.html'%}
+    </div>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      AOS.init();
+    </script>
+  </body>
+</html>
